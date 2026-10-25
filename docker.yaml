@@ -1,0 +1,59 @@
+---
+- name: Deploy Boundless Builders app with Docker
+  hosts: servers
+  become: true
+
+  vars:
+    image_name: bedeneche/builders
+    image_tag: v1.0.0
+    container_name: buildersapp
+    host_port: 80
+    container_port: 3000
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Docker and the Python Docker library
+      apt:
+        name:
+          - docker.io
+          - python3-docker
+        state: present
+
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add the ubuntu user to the docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Pull the Docker image
+      community.docker.docker_image:
+        name: "{{ image_name }}:{{ image_tag }}"
+        source: pull
+
+    - name: Run the container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}:{{ image_tag }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ host_port }}:{{ container_port }}"
+
+    - name: Check that the app responds
+      uri:
+        url: "http://localhost:{{ host_port }}"
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 3
+      until: result.status == 200

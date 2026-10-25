@@ -1,0 +1,69 @@
+# ---------- Terraform ----------
+# Local provider plugins and modules
+.terraform/
+
+# State files can contain secrets and real infrastructure details
+*.tfstate
+*.tfstate.*
+terraform.tfstate.backup
+
+# Variable files often hold IPs, tokens and passwords
+*.tfvars
+*.tfvars.json
+!*.example.tfvars
+!example.tfvars
+
+# Crash logs and local overrides
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Saved plans
+*.tfplan
+tfplan
+
+
+# ---------- SSH keys and certificates ----------
+*.pem
+*.key
+*.ppk
+ansible-lab
+ansible-lab.pub
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# ---------- Secrets ----------
+.env
+.env.*
+!.env.example
+*.secret
+*secret*
+vault_pass*
+.vault_pass
+*token*
+
+# ---------- Ansible ----------
+*.retry
+.ansible/
+ansible.log
+*.log
+
+# ---------- Editors and OS ----------
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Python / misc ----------
+__pycache__/
+*.pyc
+venv/
+.venv/
